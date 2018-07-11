@@ -46,6 +46,10 @@ app.get("/urls/:id", (req, res) => {
   res.render("url_show", templateVars);
 });
 
+app.get("/u/:shortURL", (req, res) => {
+  res.redirect(longURL);
+})
+
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
