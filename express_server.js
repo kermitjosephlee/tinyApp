@@ -41,6 +41,12 @@ app.post("/urls", (req, res) => {
   res.send("OOO EEE CAN DO!")
 });
 
+app.post("/urls/9sm5xK/delete", (req, res) => {
+  delete urlDatabase[req.params.longURL];
+
+  res.render("url_index");
+})
+
 app.get("/urls/:id", (req, res) => {
   let templateVars = { shortURL: req.params.id };
   res.render("url_show", templateVars);
