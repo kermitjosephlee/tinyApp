@@ -2,11 +2,19 @@ var express = require("express");
 var app = express();
 var PORT = 8080;
 
-
-
 var urlDatabase = {
   "b2xVn2": "http://www.lighthouse.ca",
   "9sm5xL": "http://www.google.com",
+};
+
+function generateRandomString(){
+  let tempStr = "";
+  let possibleLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for (var i = 0; i < 6; i++){
+      tempStr += possibleLetters.charAt(Math.floor(Math.random() * possibleLetters.length));
+    }
+    return tempStr;
 };
 
 app.set("view engine", "ejs");
