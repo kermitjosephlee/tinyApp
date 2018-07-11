@@ -19,17 +19,25 @@
     <% } %>
 </ul>
 
+<hr/>
 
 <ul>
     <% for (i in urls) {%>
 
       <li>
-      <%= [i] %>
-      <form method="POST" action="/urls/9sm5xK/delete">
+      <%= [i] %>&nbsp; <%= urls[i] %>
+      <form method="POST" action="/urls/<%= [i] %>/delete">
+        <input type="hidden" value="delete">
+        <input type="submit" value="delete">
+      </form>
+    </li>
 
-      <label for="shortURL">Enter a ShRT URL:</label>
-      <input id="shortURL" type="text" name="shortURL" placeholder="A1x5sm" style="width: 300px">
-      <input type="submit" value="Submit">
+<hr/>
+
+      <form method="POST" action="/urls">
+        <label for="shortURL">Enter a ShRT URL:</label>
+          <input id="shortURL" type="text" name="shortURL" placeholder="A1x5sm" style="width: 300px">
+          <input type="submit" value="Submit">
       </form>
       </li>
 
