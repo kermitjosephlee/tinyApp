@@ -13,7 +13,12 @@
   <h1>The URL Shrinker</h1>
 
 
+  <% include url_new %>
+
+  <hr/>
+
 <ul>
+  <label>List of Current Shortened URLS</label>
     <% for (i in urls) {%>
 
       <li>
@@ -23,10 +28,13 @@
         <input type="submit" value="delete">
       </form>
     </li>
+</ul>
 
 <hr/>
 
-      <form method="POST" action="/urls">
+<ul>
+      <li>
+      <form method="POST" action="/urls" style="margin:150px;">
         <label for="shortURL">Enter a ShRT URL:</label>
           <input id="shortURL" type="text" name="shortURL" placeholder="A1x5sm" style="width: 300px">
           <input type="submit" value="Submit">
@@ -35,6 +43,10 @@
 
     <% } %>
 </ul>
+
+
+
+
 
 
 </body>
