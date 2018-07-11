@@ -2,6 +2,8 @@ var express = require("express");
 var app = express();
 var PORT = 8080;
 
+
+
 var urlDatabase = {
   "b2xVn2": "http://www.lighthouse.ca",
   "9sm5xL": "http://www.google.com",
@@ -9,7 +11,8 @@ var urlDatabase = {
 
 app.set("view engine", "ejs");
 
-
+const bodyParser = require("body-parser");
+app.use(bodyParser.urlencoded({extended: true}));
 
 app.get("/", (req, res) => {
   res.render('pages/index')
