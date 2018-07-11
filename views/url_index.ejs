@@ -20,6 +20,7 @@
 
     <li>
       <%= [i] %>&nbsp; <%= urls[i] %>
+      <a href=/urls/<%= i %>>edit</a>
       <form method="POST" action="/urls/<%= [i] %>/delete">
         <input type="hidden" value="delete">
         <input type="submit" value="delete">
