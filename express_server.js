@@ -9,7 +9,8 @@ var urlDatabase = {
 
 function generateRandomString(){
   let tempStr = "";
-  let possibleLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let possibleLetters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     for (var i = 0; i < 6; i++){
       tempStr += possibleLetters.charAt(Math.floor(Math.random() * possibleLetters.length));
@@ -46,6 +47,8 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   let templateVars = { urls: urlDatabase };
   res.render("url_index", templateVars);
 })
+
+app.post("urls/")
 
 app.get("/urls/:id", (req, res) => {
   let templateVars = { shortURL: req.params.id };
