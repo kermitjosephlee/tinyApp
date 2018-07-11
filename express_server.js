@@ -21,11 +21,16 @@ app.get("/", (req, res) => {
 
 app.get("/urls", (req, res) => {
   let templateVars = { urls: urlDatabase };
-  res.render("views/url_index", templateVars)
+  res.render("url_index", templateVars)
 });
 
 app.get("/urls/new", (req, res) => {
   res.render("url_new");
+});
+
+app.post("/urls", (req, res) => {
+  console.log(req.body);
+  res.send("OOO EEE CAN DO!")
 });
 
 app.get("/urls/:id", (req, res) => {
