@@ -20,7 +20,10 @@ app.get("/urls", (req, res) => {
   res.render("url_index", templateVars)
 });
 
-
+app.get("/urls/:id", (req, res) => {
+  let templateVars = { shortURL: req.params.id };
+  res.render("url_show", templateVars);
+});
 
 app.get("/about", (req, res) => {
   res.render('pages/about')

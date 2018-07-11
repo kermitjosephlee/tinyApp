@@ -1,15 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>TinyApp</title>
+  <title>TinyApp :: Long URL</title>
 </head>
+
+<header>
+    <% include ../partials/_headers %>
+</header>
+
 <body>
 
-  <h1>URL Shrinker</h1>
+  <h1>The URL Shrinker</h1>
 <ul>
     <% for (i in urls) {%>
 
       <li><%= urls[i] %></li>
+
+    <% } %>
+</ul>
+
+<ul>
+    <% for (i in urls) {%>
+
+      <li><%= [i] %></li>
 
     <% } %>
 </ul>
