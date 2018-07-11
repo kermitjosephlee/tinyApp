@@ -15,21 +15,22 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.get("/", (req, res) => {
-  res.render('pages/index')
+  let templateVars = { urls: };
+  res.render("url_index", templateVars)
 });
 
 app.get("/urls", (req, res) => {
   let templateVars = { urls: urlDatabase };
-  res.render("url_index", templateVars)
+  res.render("views/url_index", templateVars)
+});
+
+app.get("/urls/new", (req, res) => {
+  res.render("url_new");
 });
 
 app.get("/urls/:id", (req, res) => {
   let templateVars = { shortURL: req.params.id };
   res.render("url_show", templateVars);
-});
-
-app.get("/about", (req, res) => {
-  res.render('pages/about')
 });
 
 app.get("/urls.json", (req, res) => {
