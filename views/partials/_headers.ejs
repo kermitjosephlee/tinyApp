@@ -14,11 +14,25 @@
             <li><a href="/about">About</a></li>
         </ul>
 
+<% if (!username){ %>
         <form action="/login" method="POST">
             <label for="loginName"> Show Me What You Got: </label>
             <input id="loginName" type="text" name="loginName" style="width: 300px"/>
             <input type="submit" value="SIGN IN"/>
         </form>
+    <% } else { %>
+
+ <p>username</p>
+  <p>
+  <%= username %>
+  </p>
+    <p>
+    <form action="/logout" method="POST">
+        <button>LOGOUT, <%= username %>
+        </button>
+    </form>
+    </p>
+<% } %>
 
     </div>
 
