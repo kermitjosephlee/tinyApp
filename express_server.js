@@ -8,12 +8,27 @@ var urlDatabase = {
   "9sm5xL": "http://www.google.com",
 };
 
+const users = {
+
+  "userRandomID": {
+      id: "userRandomID",
+      email: "user@example.com",
+      password: "purple-monkey-dinosaur"
+    },
+   "user2RandomID": {
+      id: "user2RandomID",
+      email: "user2@example.com",
+      password: "dishwasher-funk"
+    }
+};
+
 function generateRandomString(){
   let tempStr = "";
+  let stringLength = 6
   let possibleLetters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-    for (var i = 0; i < 6; i++){
+    for (var i = 0; i < stringLength; i++){
       tempStr += possibleLetters.charAt(Math.floor(Math.random() * possibleLetters.length));
     }
     return tempStr;
@@ -27,18 +42,50 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 
 app.get("/", (req, res) => {
-  let templateVars = { urls: urlDatabase, username: req.cookies["username"] };
+  let user = users[req.cookies["user_id"]];
+  let templateVars = { urls: urlDatabase, user: user };
   res.render("url_index", templateVars)
 });
 
 app.get("/urls", (req, res) => {
-  let templateVars = { urls: urlDatabase, username: req.cookies["username"] };
+  let user = users[req.cookies["user_id"]];
+  let templateVars = { urls: urlDatabase, user: user };
   res.render("url_index", templateVars)
 });
 
+app.get("/login", (req, res) => {
+  let user = users[req.cookies["user_id"]];
+  let templateVars = { urls: urlDatabase, user: user };
+  res.render("url_login", templateVars)
+})
+
 app.get("/urls/new", (req, res) => {
-  let templateVars = { urls: urlDatabase, username: req.cookies["username"] };
+  let user = users[req.cookies["user_id"]];
+  let templateVars = { urls: urlDatabase, user: user };
   res.render("url_new", templateVars);
+});
+
+app.get("/register", (req, res) => {
+  let user = users[req.cookies["user_id"]]
+  let templateVars = { urls: urlDatabase, user: user };
+  res.render("url_register", templateVars)
+});
+
+app.post("/register", (req, res) => {
+
+  if (req.body.email !== "" && req.body.password !== ""){
+
+    let randomId = generateRandomString();
+    let user = { id: randomId, email: req.body.email, password: req.body.password };
+    users[randomId] = user;
+    res.cookie(randomId, req.body.email)
+    let templateVars = { [randomId] : users };
+    console.log(users);
+    res.redirect("/urls");
+  } else {
+    res.redirect("/error");
+  }
+
 });
 
 app.post("/logout", (req, res) => {
@@ -71,7 +118,8 @@ app.post("/urls/:shortURL", (req, res) => {
 });
 
 app.get("/urls/:id", (req, res) => {
-  let templateVars = { shortURL: req.params.id, username: req.cookies["username"] };
+  let user = users[req.cookies["user_id"]];
+  let templateVars = { shortURL: req.params.id, user: user};
   res.render("url_show", templateVars);
 });
 
@@ -87,6 +135,10 @@ app.get("/urls.json", (req, res) => {
 app.get("/hello", (req, res) => {
   res.end("<html><body>Hello <b>World</b></body></html>\n");
 });
+
+app.get("/error", (req, res) => {
+  res.end("<html><body><b>ERROR!! --400-- No value in Registration Fields, sucka</b></body></html>\n")
+})
 
 app.listen(PORT, () => {
   console.log('Example app listening on port ${PORT}!');

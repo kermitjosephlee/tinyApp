@@ -1,0 +1,45 @@
+<html>
+
+  <head>
+  </head>
+
+  <body>
+<% if (!user){ %>
+
+       <form method="POST" action="/register">
+
+        <label for="email address"> Give me an email address to eat: </label> <br />
+
+
+        <input id="eml" type="email" name="email">
+
+        <br />
+
+        <label for="password"> Secret password time: </label><br />
+        <input id="pwd" type="password" name="password">
+
+        <br />
+
+        <input type="submit" value="register">
+
+        <br />
+
+      </form>
+
+  <% } else { %>
+
+          <p>
+            user:
+          </p>
+          <p>
+            <%= user.email %>
+          </p>
+          <p>
+            <form action="/logout" method="POST">
+              <button>LOGOUT, <%= user.email %></button>
+            </form>
+          </p>
+
+    <% } %>
+  </body>
+</html>
