@@ -12,15 +12,16 @@
         <ul class="nav navbar-nav">
             <li><a href="/">Home</a></li>
             <li><a href="/urls/new">New URL</a></li>
-            <li><a href="/login">Login</a></li>
-            <li><a href="/register">Register</a></li>
 
-  <!--           <% if(true){ %>
-   <h1>foo</h1>
- <% } else{ %>
-   <h1>bar</h1>
-<% } %>
- -->
+
+            <% if(user){ %>
+                    <h1>hello <%= user %></h1>
+            <% } else{ %>
+                    <h1> please login </h1>
+                    <li><a href="/login">Login</a></li>
+                    <li><a href="/register">Register</a></li>
+            <% } %>
+
 
         </ul>
 

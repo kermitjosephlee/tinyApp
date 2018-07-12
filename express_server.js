@@ -41,6 +41,19 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(cookieParser());
 
+app.use(function (req, res, next) {
+  console.log("");
+  console.log("**  TOP  *********************************");
+  console.log(req.method + ": " +req.path);
+  console.log("cookies:", req.cookies);
+  console.log('- - - - - - - - - - - - - -');
+  console.log("USERS:", users);
+  console.log('- - - - - - - - - - - - - -');
+  console.log("urlDB:", urlDatabase);
+  console.log('########################  END  ############');
+  next();
+});
+
 app.get("/", (req, res) => {
   let user = users[req.cookies["user_id"]];
   let templateVars = { urls: urlDatabase, user: user };
@@ -48,7 +61,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  let user = users[req.cookies["user_id"]];
+  let user = req.cookies["user_id"];
   let templateVars = { urls: urlDatabase, user: user };
   res.render("url_index", templateVars)
 });
@@ -76,11 +89,10 @@ app.post("/register", (req, res) => {
   if (req.body.email !== "" && req.body.password !== ""){
 
     let randomId = generateRandomString();
-    let user = { id: randomId, email: req.body.email, password: req.body.password };
-    users[randomId] = user;
-    res.cookie(randomId, req.body.email)
+    let userObj = { id: randomId, email: req.body.email, password: req.body.password };
+    users.user_id = userObj;
+    res.cookie("user_id", randomId)
     let templateVars = { [randomId] : users };
-    console.log(users);
     res.redirect("/urls");
   } else {
     res.redirect("/error");
@@ -93,12 +105,12 @@ app.post("/login", (req, res) => {
   if (req.body.email !== "" && req.body.password !== ""){
 
     let randomId = generateRandomString();
-    let user = { id: randomId, email: req.body.email, password: req.body.password };
-    users[randomId] = user;
-    res.cookie(randomId, req.body.email)
-    let templateVars = { [randomId] : users };
+    let userObj = { id: randomId, email: req.body.email, password: req.body.password };
+    users.user_id = userObj;
+    res.cookie("user_id", req.body.email)
+    let templateVars = { [user_id] : users };
     console.log(users);
-    res.redirect("/urls");
+    res.redirect("/");
   } else {
     res.redirect("/error");
   }
