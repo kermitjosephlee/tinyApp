@@ -11,28 +11,14 @@
 
         <ul class="nav navbar-nav">
             <li><a href="/">Home</a></li>
-            <li><a href="/about">About</a></li>
+            <li><a href="/urls/new">New URL</a></li>
+            <li><a href="/login">Login</a></li>
+            <li><a href="/register">Register</a></li>
+
+
         </ul>
 
-<% if (!user){ %>
-        <form action="/login" method="POST">
-            <label for="loginName"> Show Me What You Got: </label>
-            <input id="loginName" type="text" name="loginName" style="width: 300px"/>
-            <input type="submit" value="SIGN IN"/>
-        </form>
-    <% } else { %>
 
- <p>user: </p>
-  <p>
-  <%= user.email %>
-  </p>
-    <p>
-    <form action="/logout" method="POST">
-        <button>LOGOUT, <%= user.email %>
-        </button>
-    </form>
-    </p>
-<% } %>
 
     </div>
 

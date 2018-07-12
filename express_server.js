@@ -88,6 +88,23 @@ app.post("/register", (req, res) => {
 
 });
 
+app.post("/login", (req, res) => {
+
+  if (req.body.email !== "" && req.body.password !== ""){
+
+    let randomId = generateRandomString();
+    let user = { id: randomId, email: req.body.email, password: req.body.password };
+    users[randomId] = user;
+    res.cookie(randomId, req.body.email)
+    let templateVars = { [randomId] : users };
+    console.log(users);
+    res.redirect("/urls");
+  } else {
+    res.redirect("/error");
+  }
+
+});
+
 app.post("/logout", (req, res) => {
   res.clearCookie("username");
   res.redirect("/urls");
@@ -103,11 +120,6 @@ app.post("/urls", (req, res) => {
 app.post("/urls/:shortURL/delete", (req, res) => {
   delete urlDatabase[req.params.shortURL];
   let templateVars = { urls: urlDatabase };
-  res.redirect("/urls");
-});
-
-app.post("/login", (req, res) => {
-  res.cookie("username", req.body.loginName);
   res.redirect("/urls");
 });
 
