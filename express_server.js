@@ -34,6 +34,21 @@ function generateRandomString(){
     return tempStr;
 };
 
+function loginValidator (loginEmail, loginPassword){
+
+  for (let i in users){
+    if (users[i].email === loginEmail){
+      if (users[i].password === loginPassword) {
+        return users[i];
+      } else {
+        return false;
+      }
+    }
+  }
+  return false;
+};
+
+
 app.set("view engine", "ejs");
 
 const bodyParser = require("body-parser");
@@ -41,18 +56,26 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(cookieParser());
 
+
 app.use(function (req, res, next) {
   console.log("");
   console.log("**  TOP  *********************************");
   console.log(req.method + ": " +req.path);
   console.log("cookies:", req.cookies);
   console.log('- - - - - - - - - - - - - -');
+  console.log("req.body.email:", req.body.email);
+  console.log('- - - - - - - - - - - - - -');
   console.log("USERS:", users);
   console.log('- - - - - - - - - - - - - -');
   console.log("urlDB:", urlDatabase);
+  console.log("- - - - - - - - - - - - - -");
+  console.log("loginValidator: ", loginValidator(req.body.email));
+  console.log("- - - - - - - - - - - - - -");
   console.log('########################  END  ############');
   next();
 });
+
+
 
 app.get("/", (req, res) => {
   let user = users[req.cookies["user_id"]];
@@ -86,13 +109,12 @@ app.get("/register", (req, res) => {
 
 app.post("/register", (req, res) => {
 
-  if (req.body.email !== "" && req.body.password !== ""){
+  if (req.body.email && req.body.password){
 
     let randomId = generateRandomString();
     let userObj = { id: randomId, email: req.body.email, password: req.body.password };
-    users.user_id = userObj;
+    users[randomId]= userObj;
     res.cookie("user_id", randomId)
-    let templateVars = { [randomId] : users };
     res.redirect("/urls");
   } else {
     res.redirect("/error");
@@ -101,16 +123,12 @@ app.post("/register", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-
-  if (req.body.email !== "" && req.body.password !== ""){
-
-    let randomId = generateRandomString();
-    let userObj = { id: randomId, email: req.body.email, password: req.body.password };
-    users.user_id = userObj;
-    res.cookie("user_id", req.body.email)
-    let templateVars = { [user_id] : users };
-    console.log(users);
+  console.log('req.body.email 2', req.body.email)
+  let foundUser = loginValidator(req.body.email, req.body.password);
+  if (req.body.email && req.body.password && foundUser){
+    res.cookie('user_id', foundUser.id);
     res.redirect("/");
+
   } else {
     res.redirect("/error");
   }
@@ -161,7 +179,7 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/error", (req, res) => {
-  res.end("<html><body><b>ERROR!! --400-- No value in Registration Fields, sucka</b></body></html>\n")
+  res.status(403).send();
 })
 
 app.listen(PORT, () => {
