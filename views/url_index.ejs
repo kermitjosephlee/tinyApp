@@ -10,7 +10,7 @@
 
 <body>
 
-  <h1>The URL Shrinker</h1>
+  <h1>The URL Shrink List</h1>
 
  <hr/>
 
@@ -19,13 +19,14 @@
     <% for (key in urlDatabase) {%>
 
     <li>
-      <%= [key] %>&nbsp; <%= urlDatabase[key] %>
-      <a href=/urls/<%= key %>>edit</a>
-      <form method="POST" action="/urls/<%= [key] %>/delete">
+      <a href="<%= urlDatabase[key] %>"><%= [key] %></a>&nbsp; &nbsp; &nbsp;
+      <a href="<%= urlDatabase[key] %>"><%= urlDatabase[key] %></a>
+<!--       <a href=/urls/<%= key %>>edit</a>-->
+<!--       <form method="POST" action="/urls/<%= [key] %>/delete">
         <input type="hidden" value="delete">
         <input type="submit" value="delete">
       </form>
-    </li>
+ --> </li>
   <% }%>
 </ul>
 

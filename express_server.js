@@ -3,10 +3,6 @@ var app = express();
 var cookieParser = require('cookie-parser');
 var PORT = 8080;
 
-var urlDatabase = {
-  "b2xVn2": "http://www.lighthouse.ca",
-  "9sm5xL": "http://www.google.com",
-};
 
 const users = {
 
@@ -18,9 +14,19 @@ const users = {
    "user2RandomID": {
       id: "user2RandomID",
       email: "user2@example.com",
-      password: "dishwasher-funk"
+      password: "123"
     }
 };
+
+
+var urlDatabase = {
+
+  "b2xVn2": { "b2xVn2": "http://www.lighthouse.ca", "userRandomID": users.id},
+  "9sm5xL": { "9sm5xL": "http://www.google.com","user2RandomID": users.id},
+
+};
+
+
 
 function generateRandomString(){
   let tempStr = "";
@@ -111,8 +117,17 @@ app.get("/login", (req, res) => {
 // express then renders "url_new" with this information and renders it at location /urls/new
 app.get("/urls/new", (req, res) => {
   let user = users[req.cookies["user_id"]];
-  let templateVars = { urlDatabase: urlDatabase, user: user };
-  res.render("url_new", templateVars);
+  let foundUser = loginValidator(req.body.email, req.body.password);
+
+  if (req.body.email && req.body.password && foundUser){
+    res.cookie('user_id', foundUser.id);
+    let templateVars = { urlDatabase: urlDatabase, user: user };
+    res.render("url_new", templateVars);
+
+  } else {
+    res.redirect("/login");
+  }
+
 });
 
 app.get("/register", (req, res) => {
@@ -152,14 +167,13 @@ app.post("/register", (req, res) => {
 // we then redirect the page back to root
 // if the logic gate is not satisfied, we redirect to error
 app.post("/login", (req, res) => {
-  console.log('req.body.email 2', req.body.email)
   let foundUser = loginValidator(req.body.email, req.body.password);
   if (req.body.email && req.body.password && foundUser){
     res.cookie('user_id', foundUser.id);
     res.redirect("/");
 
   } else {
-    res.redirect("/error");
+    res.redirect("/login");
   }
 
 });
