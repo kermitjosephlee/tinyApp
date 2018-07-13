@@ -13,7 +13,7 @@ const users = {
   "userRandomID": {
       id: "userRandomID",
       email: "user@example.com",
-      password: "purple-monkey-dinosaur"
+      password: "qwe"
     },
    "user2RandomID": {
       id: "user2RandomID",
@@ -63,7 +63,7 @@ app.use(function (req, res, next) {
   console.log(req.method + ": " +req.path);
   console.log("cookies:", req.cookies);
   console.log('- - - - - - - - - - - - - -');
-  console.log("req.body.email:", req.body.email);
+  console.log("req.body:", req.body);
   console.log('- - - - - - - - - - - - - -');
   console.log("USERS:", users);
   console.log('- - - - - - - - - - - - - -');
@@ -77,23 +77,33 @@ app.use(function (req, res, next) {
 
 
 
+// created variable "userID" to pull user_id from cookie
+// user assigned specific user obj from users
+// email address would be user.email
 app.get("/", (req, res) => {
-  let user = users[req.cookies["user_id"]];
+  let userID = req.cookies.user_id;
+  let user = users[userID];
   let templateVars = { urls: urlDatabase, user: user };
   res.render("url_index", templateVars)
 });
 
+// created variable "userID" to pull user_id from cookie
+// "user" assigned specific user obj from users
+// email address would be user.email
 app.get("/urls", (req, res) => {
-  let user = req.cookies["user_id"];
+  let userID = req.cookies.user_id
+  let user = users[userID];
   let templateVars = { urls: urlDatabase, user: user };
   res.render("url_index", templateVars)
 });
 
+//
 app.get("/login", (req, res) => {
   let user = users[req.cookies["user_id"]];
   let templateVars = { urls: urlDatabase, user: user };
   res.render("url_login", templateVars)
 })
+
 
 app.get("/urls/new", (req, res) => {
   let user = users[req.cookies["user_id"]];
