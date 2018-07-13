@@ -16,12 +16,12 @@
 
 <ul>
   <label>List of Current Shortened URLS</label>
-    <% for (i in urls) {%>
+    <% for (key in urlDatabase) {%>
 
     <li>
-      <%= [i] %>&nbsp; <%= urls[i] %>
-      <a href=/urls/<%= i %>>edit</a>
-      <form method="POST" action="/urls/<%= [i] %>/delete">
+      <%= [key] %>&nbsp; <%= urlDatabase[key] %>
+      <a href=/urls/<%= key %>>edit</a>
+      <form method="POST" action="/urls/<%= [key] %>/delete">
         <input type="hidden" value="delete">
         <input type="submit" value="delete">
       </form>

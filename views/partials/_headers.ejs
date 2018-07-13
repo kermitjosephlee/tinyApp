@@ -16,6 +16,14 @@
 
             <% if(user){ %>
                     <h1>hello <%= user.email %></h1>
+
+                    <p>
+                        <form action="/logout" method="POST">
+                        <button>LOGOUT, <%= user.email %></button>
+                        </form>
+                    </p>
+
+
             <% } else{ %>
                     <h1> please login </h1>
                     <li><a href="/login">Login</a></li>
