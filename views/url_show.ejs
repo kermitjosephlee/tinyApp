@@ -1,12 +1,15 @@
 <html lang="en">
   <head>Shortened URL Editor: </head>
 
-<header>
-    <% include ./partials/_headers %>
-</header>
 
 <!-- should display a list of shortened URLS that you could edit -->
   <body style="font-size:20px;">
+
+    <header>
+      <% include ./partials/_headers %>
+    </header>
+
+
     <form action="/urls/<%= shortURL %>" method="POST" style="margin:150px;">
 
 

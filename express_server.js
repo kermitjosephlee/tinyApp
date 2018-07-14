@@ -117,12 +117,11 @@ app.get("/login", (req, res) => {
 // we create an object called templateVar which EJS will see as the object of urlDatabase (left side) which we assign the value of object urlDatabase (right side)
 // express then renders "url_new" with this information and renders it at location /urls/new
 app.get("/urls/new", (req, res) => {
-  let user = users[req.cookies.user_id];
-  let foundUser = loginValidator(req.body.email, req.body.password);
+  let userID = req.cookies.user_id;
+  let user = users[userID];
 
-  if (req.body.email && req.body.password && foundUser){
-    res.cookie('user_id', foundUser.id);
-    let templateVars = { urlUserDb: urlDatabase[req.body.id], user: user };
+  if (userID){
+    let templateVars = { user: user };
     res.render("url_new", templateVars);
 
   } else {
@@ -132,7 +131,7 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
-  let userID = req.cookies.user_id
+  let userID = req.cookies.user_id;
   let user = users[req.cookies["user_id"]]
   let templateVars = { urlUserDb: urlDatabase[userID], user: user };
   res.render("url_register", templateVars)
@@ -153,7 +152,9 @@ app.post("/register", (req, res) => {
     let randomId = generateRandomString();
     let userObj = { id: randomId, email: req.body.email, password: req.body.password };
     users[randomId]= userObj;
-    res.cookie("user_id", randomId)
+    urlDatabase[randomId] = {};
+
+    res.cookie("user_id", randomId);
     res.redirect("/urls");
   } else {
     res.redirect("/error");
@@ -192,7 +193,8 @@ app.post("/logout", (req, res) => {
 // we then redirect to /urls
 app.post("/urls", (req, res) => {
   let tempStr = generateRandomString();
-  urlDatabase[req.body.id] = { tempStr: req.body.longURL,}
+  let userID = req.cookies.user_id;
+  urlDatabase[userID][tempStr] = req.body.longURL;
   res.redirect("/");
 });
 
