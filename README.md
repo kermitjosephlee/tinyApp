@@ -11,6 +11,8 @@
     - EJS templating
 
     It is NOT the prettiest thing but it works. Enjoy.
+    
+    LHL Note: I had issues with my screenshots. Sorry.
 
 ## Dependencies ::
 
