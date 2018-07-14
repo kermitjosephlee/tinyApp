@@ -62,7 +62,6 @@ app.get("/", (req, res) => {
   const userID = req.session.user_id;
   const user = users[userID];
   const templateVars = { urlUserDb: urlDatabase[userID], user: user };
-  console.log("templateVars:", templateVars);
   res.render("url_index", templateVars)
 });
 
@@ -130,7 +129,7 @@ app.post("/login", (req, res) => {
 });
 
 app.post("/logout", (req, res) => {
-  res.end.user_id;
+  req.session.user_id = null;
   res.redirect("/");
 })
 
