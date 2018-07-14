@@ -4,27 +4,14 @@
     <title>TinyApp :: The URL Shrinker</title>
   </head>
 
-<body>
+  <body>
+    <header>
+      <% include ./partials/_headers %>
+    </header>
 
+    <h1>The URL Shrink List</h1>
 
-  <header>
-    <% include ./partials/_headers %>
-  </header>
-
-
-  <h1>The URL Shrink List</h1>
-
- <hr/>
-
-<ul>
-
-
-
-  <label>List of Current Shortened URLS</label>
     <% for (key in urlUserDb) {%>
-
-<!-- need this to display user-specific URLS in both short and long forms along with edit and delete buttons and functionalities -->
-
 
     <li>
       <a href="<%= urlUserDb[key] %>"><%= [key] %></a>&nbsp; &nbsp; &nbsp;
@@ -37,15 +24,8 @@
       <form action="/urls/<%= key %>/delete" method="POST">
         <button>delete <%= urlUserDb[key] %></button>
       </form>
-
-
- </li>
-  <% }%>
-</ul>
-
-<hr/>
-
-
+    </li>
+    <% }%>
 
 </body>
 </html>
