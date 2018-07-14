@@ -1,22 +1,22 @@
 const express = require("express");
 const app = express();
-const cookieParser = require('cookie-parser');
+const cookieSession = require('cookie-session');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;  //assigned to 10 - following NPM lit for bcrypt - ¯\_(ツ)_/¯
 const PORT = 8080;
 
 
 const users = {
-  "userRandomID": {
-    id: "userRandomID",
-    email: "user@example.com",
-    password: "qwe"
-  },
- "user2RandomID": {
-    id: "user2RandomID",
-    email: "user2@example.com",
-    password: "123"
-  }
+ //  "userRandomID": {
+ //    id: "userRandomID",
+ //    email: "user@example.com",
+ //    password: "qwe"
+ //  },
+ // "user2RandomID": {
+ //    id: "user2RandomID",
+ //    email: "user2@example.com",
+ //    password: "123"
+ //  }
 };
 
 // urlDatabase is an object that contains unique ids for every long URL placed in it. Each URL is keyed by their shortURL as an identifyer. Each URL object also has the userId keying the variable users.id in the users object
@@ -56,18 +56,21 @@ function loginValidator (loginEmail, loginPassword){
 
 
 app.set("view engine", "ejs");
+// app.set('trust proxy')
 
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
-app.use(cookieParser());
-
+app.use(cookieSession({
+  name: 'session',
+  keys: ['key1', 'key2']
+}))
 
 app.use(function (req, res, next) {
   console.log("");
   console.log("**  TOP  *********************************");
   console.log(req.method + ": " +req.path);
-  console.log("cookies:", req.cookies);
+  console.log("cookies:", req.session);
   console.log('- - - - - - - - - - - - - -');
   console.log("req.body:", req.body);
   console.log('- - - - - - - - - - - - - -');
@@ -83,7 +86,7 @@ app.use(function (req, res, next) {
 // user assigned specific user obj from users
 // email address would be user.email
 app.get("/", (req, res) => {
-  const userID = req.cookies.user_id;
+  const userID = req.session.user_id;
   const user = users[userID];
   const templateVars = { urlUserDb: urlDatabase[userID], user: user };
   console.log("templateVars:", templateVars);
@@ -95,7 +98,7 @@ app.get("/", (req, res) => {
 // "user" assigned specific user obj from users
 //
 app.get("/urls", (req, res) => {
-  const userID = req.cookies.user_id
+  const userID = req.session.user_id
   const user = users[userID];
   console.log("userID:", userID);
   const templateVars = { urlUserDb: urlDatabase[userID], user: user,shortURL: req.params.shortURL};
@@ -103,23 +106,23 @@ app.get("/urls", (req, res) => {
   res.render("url_index", templateVars)
 });
 
-// user is defines the "user_id" in the req.cookies within object users
+// user is defines the "user_id" in the req.session within object users
 // templateVars is the key value pairs of variables passed to EJS
 // res.render is the call to express to send "url_login.ejs" with the data contained in obj templateVars
 // app.get is the express function call that accepts parameters "/login", and req (request) and res (result)
 app.get("/login", (req, res) => {
-  const userID = req.cookies.user_id;
-  const user = users[req.cookies["user_id"]];
+  const userID = req.session.user_id;
+  const user = users[req.session["user_id"]];
   const templateVars = { urlUserDb: urlDatabase[userID], user: user };
   res.render("url_login", templateVars);
 });
 
 
-// get takes user which we define as name "user_id" from req.cookies from object users
+// get takes user which we define as name "user_id" from req.session from object users
 // we create an object called templateVar which EJS will see as the object of urlDatabase (left side) which we assign the value of object urlDatabase (right side)
 // express then renders "url_new" with this information and renders it at location /urls/new
 app.get("/urls/new", (req, res) => {
-  const userID = req.cookies.user_id;
+  const userID = req.session.user_id;
   const user = users[userID];
 
   if (userID){
@@ -133,8 +136,8 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
-  const userID = req.cookies.user_id;
-  const user = users[req.cookies["user_id"]]
+  const userID = req.session.user_id;
+  const user = users[req.session["user_id"]]
   const templateVars = { urlUserDb: urlDatabase[userID], user: user };
   res.render("url_register", templateVars)
 });
@@ -175,7 +178,7 @@ app.post("/register", (req, res) => {
 app.post("/login", (req, res) => {
   const foundUser = loginValidator(req.body.email, req.body.password);
   if (req.body.email && req.body.password && foundUser){
-    res.cookie('user_id', foundUser.id);
+    req.session.user_id = foundUser.id;
     res.redirect("/");
 
   } else {
@@ -196,13 +199,13 @@ app.post("/logout", (req, res) => {
 // we then redirect to /urls
 app.post("/urls", (req, res) => {
   const tempStr = generateRandomString();
-  const userID = req.cookies.user_id;
+  const userID = req.session.user_id;
   urlDatabase[userID][tempStr] = req.body.longURL;
   res.redirect("/");
 });
 
 app.post("/urls/:shortURL", (req, res) => {
-  const userID = req.cookies.user_id;
+  const userID = req.session.user_id;
   const shortURL = req.params.shortURL;
   const urlUserDb = urlDatabase[userID];
   // urlUserDb = { shortURL : req.body.longURL };
@@ -212,20 +215,20 @@ app.post("/urls/:shortURL", (req, res) => {
 
 app.post("/urls/:shortURL/delete", (req, res) => {
   console.log("req.params.shortURL: ", req.params.shortURL);
-  const userID = req.cookies.user_id;
+  const userID = req.session.user_id;
   delete urlDatabase[userID][req.params.shortURL];
   res.redirect("/urls");
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  const userID = req.cookies.user_id;
-  const user = users[req.cookies["user_id"]];
+  const userID = req.session.user_id;
+  const user = users[req.session["user_id"]];
   const templateVars = { urlUserDb: urlDatabase[userID] , user: user, shortURL: req.params.shortURL};
   res.render("url_show", templateVars);
 });
 
 // app.get("/urls/:shortURL", (req, res) => {
-//   let userID = req.cookies.user_id;
+//   let userID = req.session.user_id;
 //   let longURL = urlDatabase[userID][req.params.shortURL];
 //   res.redirect(longURL);
 // })
