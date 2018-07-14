@@ -1,37 +1,37 @@
 <html>
 
   <head>
+    <title>TinyApp :: The URL Shrinker</title>
   </head>
 
-<header>
-    <% include ./partials/_headers %>
-</header>
-
-
   <body>
-<% if (!user){ %>
 
-       <form method="POST" action="/login">
+    <header>
+        <% include ./partials/_headers %>
+    </header>
 
-        <label for="email address"> Give me an email address to eat: </label> <br />
+      <% if (!user){ %>
 
+        <form method="POST" action="/login">
 
-        <input id="eml" type="email" name="email">
+          <label for="email address"> Give me an email address to eat: </label>
+          <br />
 
-        <br />
+          <input id="eml" type="email" name="email">
+          <br />
 
-        <label for="password"> Secret password time: </label><br />
-        <input id="pwd" type="password" name="password">
+          <label for="password"> Secret password time: </label>
+          <br />
 
-        <br />
+          <input id="pwd" type="password" name="password">
+          <br />
 
-        <input type="submit" value="login">
+          <input type="submit" value="login">
+          <br />
 
-        <br />
+        </form>
 
-      </form>
-
-  <% } else { %>
+      <% } else { %>
 
           <p>
 

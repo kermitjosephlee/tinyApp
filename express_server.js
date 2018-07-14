@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const cookieParser = require('cookie-parser');
 const bcrypt = require('bcrypt');
+const saltRounds = 10;  //assigned to 10 - following NPM lit for bcrypt - ¯\_(ツ)_/¯
 const PORT = 8080;
 
 
@@ -21,7 +22,7 @@ const users = {
 // urlDatabase is an object that contains unique ids for every long URL placed in it. Each URL is keyed by their shortURL as an identifyer. Each URL object also has the userId keying the variable users.id in the users object
 // urlDB = { users.userID: { shortURL : longURL}};
 const urlDatabase = {
-  "userRandomID":   { "b2xVn2": "http://www.lighthouse.ca", "asdfed": "http://www.yahoo.com"},
+  "userRandomID":   { "b2xVn2": "http://www.lighthouse.ca", "asdfed": "http://www.yahoo.com",},
   "user2RandomID":  { "9sm5xL": "http://www.google.com", },
 };
 
@@ -151,7 +152,8 @@ app.post("/register", (req, res) => {
   if (req.body.email && req.body.password){
 
     const randomId = generateRandomString();
-    const userObj = { id: randomId, email: req.body.email, password: req.body.password };
+    const encryptedPassword = bcrypt.hashSync(req.body.password, saltRounds);
+    const userObj = { id: randomId, email: req.body.email, password: encryptedPassword };
     users[randomId]= userObj;
     urlDatabase[randomId] = {};
 
