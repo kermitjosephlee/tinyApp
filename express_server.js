@@ -190,7 +190,7 @@ app.post("/login", (req, res) => {
 // when post logout is called, we call on the clearCookie function to clear cookie with name user_id
 // we then redirect to root
 app.post("/logout", (req, res) => {
-  res.clearCookie("user_id");
+  res.end.user_id;
   res.redirect("/");
 })
 
