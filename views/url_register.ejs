@@ -10,7 +10,7 @@
       <% include ./partials/_headers %>
     </header>
 
-    <h1>Tiny App :: Register</h1>
+    <h1>Register</h1>
 
     <hr/>
 
@@ -18,10 +18,12 @@
       <li>
 
         <form method="POST" action="/register">
-          <label for="email address"> Give me an email address to eat: </label> <br />
+          <label for="email address"> Email Address :: </label> <br />
           <input id="eml" type="email" name="email">
           <br />
-          <label for="password"> Secret password time: </label><br />
+      </li>
+      <li>
+          <label for="password"> Password :: </label><br />
           <input id="pwd" type="password" name="password">
           <br />
           <input type="submit" value="register">
