@@ -111,11 +111,11 @@ app.get("/urls", (req, res) => {
 // res.render is the call to express to send "url_login.ejs" with the data contained in obj templateVars
 // app.get is the express function call that accepts parameters "/login", and req (request) and res (result)
 app.get("/login", (req, res) => {
-  let userID = req.cookies.user_id
+  let userID = req.cookies.user_id;
   let user = users[req.cookies["user_id"]];
   let templateVars = { urlUserDb: urlDatabase[userID], user: user };
-  res.render("url_login", templateVars)
-})
+  res.render("url_login", templateVars);
+});
 
 
 // get takes user which we define as name "user_id" from req.cookies from object users
@@ -137,8 +137,9 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
+  let userID = req.cookies.user_id
   let user = users[req.cookies["user_id"]]
-  let templateVars = { urlUserDb: urlDatabase[req.body.id], user: user };
+  let templateVars = { urlUserDb: urlDatabase[userID], user: user };
   res.render("url_register", templateVars)
 });
 
@@ -211,20 +212,19 @@ app.post("/urls/:shortURL", (req, res) => {
 app.post("/urls/:shortURL/delete", (req, res) => {
   console.log("req.params.shortURL: ", req.params.shortURL);
   let userID = req.cookies.user_id;
-  delete urlDatabase[userID].req.params.shortURL;
+  delete urlDatabase[userID][req.params.shortURL];
   res.redirect("/urls");
 });
 
 app.get("/urls/:id", (req, res) => {
   let userID = req.cookies.user_id;
   let user = users[req.cookies["user_id"]];
-  let templateVars = { shortURL: req.params.id, user: user};
+  let templateVars = { urlUserDb: urlDatabase[userID] , user: user};
   res.render("url_show", templateVars);
 });
 
 app.get("/urls/:shortURL", (req, res) => {
   let userID = req.cookies.user_id;
-  console.log("req.params: ", req.params);
   let longURL = urlDatabase[userID][req.params.shortURL];
   res.redirect(longURL);
 })
