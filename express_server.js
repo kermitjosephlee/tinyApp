@@ -41,13 +41,10 @@ function generateRandomString(){
 
 function loginValidator (loginEmail, loginPassword){
 
-  // converts unencrypted password to encrypted version
-  const encryptedPassword = bcrypt.hashSync(loginPassword, saltRounds);
-
   for (let userId in users){
     const user = users[userId];
     if (user.email === loginEmail){
-      if (bcrypt.compareSync(user.password, encryptedPassword)) {
+      if (bcrypt.compareSync(loginPassword, user.password)) {
         return user;
       } else {
         return false;
