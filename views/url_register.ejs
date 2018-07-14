@@ -4,46 +4,34 @@
     <title>TinyApp :: The URL Shrinker</title>
   </head>
 
+  <body>
 
-<body>
+    <header>
+      <% include ./partials/_headers %>
+    </header>
 
-  <header>
-    <% include ./partials/_headers %>
-  </header>
+    <h1>Tiny App :: Register</h1>
 
+    <hr/>
 
-  <h1>Tiny App :: Register</h1>
+    <ul>
+      <li>
 
- <hr/>
+        <form method="POST" action="/register">
+          <label for="email address"> Give me an email address to eat: </label> <br />
+          <input id="eml" type="email" name="email">
+          <br />
+          <label for="password"> Secret password time: </label><br />
+          <input id="pwd" type="password" name="password">
+          <br />
+          <input type="submit" value="register">
+          <br />
+        </form>
 
-  <ul>
-    <li>
+      </li>
+    </ul>
 
-      <form method="POST" action="/register">
+    <hr/>
 
-        <label for="email address"> Give me an email address to eat: </label> <br />
-
-
-        <input id="eml" type="email" name="email">
-
-        <br />
-
-        <label for="password"> Secret password time: </label><br />
-        <input id="pwd" type="password" name="password">
-
-        <br />
-
-        <input type="submit" value="register">
-
-        <br />
-
-      </form>
-
-    </li>
-  </ul>
-
-  <hr/>
-
-
-</body>
+  </body>
 </html>

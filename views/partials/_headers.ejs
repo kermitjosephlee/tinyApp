@@ -1,5 +1,8 @@
 <!-- views/partials/_header.ejs -->
 
+    <h1>The URL Shrinker </h1>
+
+
     <li><a href="/">Home</a></li>
 
     <% if(user){ %>
@@ -10,12 +13,11 @@
 
     <br />
     <br />
-        <li><a href="/urls/new">New URL to squish?</a></li>
+        <li><a href="/urls/new">New URL to shrink :: </a></li>
     <br />
 
 
     <% } else{ %>
-    <h3> login yo self before ya wreck yo self</h1>
     <li><a href="/login">Login</a></li>
     <li><a href="/register">Register</a></li>
     <% } %>
