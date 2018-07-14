@@ -5,28 +5,24 @@ var PORT = 8080;
 
 
 const users = {
-
   "userRandomID": {
-      id: "userRandomID",
-      email: "user@example.com",
-      password: "qwe"
-    },
-   "user2RandomID": {
-      id: "user2RandomID",
-      email: "user2@example.com",
-      password: "123"
-    }
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "qwe"
+  },
+ "user2RandomID": {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "123"
+  }
 };
 
 // urlDatabase is an object that contains unique ids for every long URL placed in it. Each URL is keyed by their shortURL as an identifyer. Each URL object also has the userId keying the variable users.id in the users object
 // urlDB = { users.userID: { shortURL : longURL}};
 var urlDatabase = {
-
   "userRandomID":   { "b2xVn2": "http://www.lighthouse.ca", "asdfed": "http://www.yahoo.com"},
   "user2RandomID":  { "9sm5xL": "http://www.google.com", },
-
 };
-
 
 
 function generateRandomString(){
@@ -43,10 +39,11 @@ function generateRandomString(){
 
 function loginValidator (loginEmail, loginPassword){
 
-  for (let i in users){
-    if (users[i].email === loginEmail){
-      if (users[i].password === loginPassword) {
-        return users[i];
+  for (let userId in users){
+    const user = users[userId];
+    if (user.email === loginEmail){
+      if (user.password === loginPassword) {
+        return user;
       } else {
         return false;
       }
@@ -80,15 +77,13 @@ app.use(function (req, res, next) {
   next();
 });
 
-
-
 // created variable "userID" to pull user_id from cookie
 // user assigned specific user obj from users
 // email address would be user.email
 app.get("/", (req, res) => {
-  let userID = req.cookies.user_id;
-  let user = users[userID];
-  let templateVars = { urlUserDb: urlDatabase[userID], user: user };
+  const userID = req.cookies.user_id;
+  const user = users[userID];
+  const templateVars = { urlUserDb: urlDatabase[userID], user: user };
   console.log("templateVars:", templateVars);
 
   res.render("url_index", templateVars)
@@ -98,10 +93,10 @@ app.get("/", (req, res) => {
 // "user" assigned specific user obj from users
 //
 app.get("/urls", (req, res) => {
-  let userID = req.cookies.user_id
-  let user = users[userID];
+  const userID = req.cookies.user_id
+  const user = users[userID];
   console.log("userID:", userID);
-  let templateVars = { urlUserDb: urlDatabase[userID], user: user };
+  const templateVars = { urlUserDb: urlDatabase[userID], user: user,shortURL: req.params.shortURL};
   console.log("templateVars: ", templateVars)
   res.render("url_index", templateVars)
 });
@@ -111,9 +106,9 @@ app.get("/urls", (req, res) => {
 // res.render is the call to express to send "url_login.ejs" with the data contained in obj templateVars
 // app.get is the express function call that accepts parameters "/login", and req (request) and res (result)
 app.get("/login", (req, res) => {
-  let userID = req.cookies.user_id;
-  let user = users[req.cookies["user_id"]];
-  let templateVars = { urlUserDb: urlDatabase[userID], user: user };
+  const userID = req.cookies.user_id;
+  const user = users[req.cookies["user_id"]];
+  const templateVars = { urlUserDb: urlDatabase[userID], user: user };
   res.render("url_login", templateVars);
 });
 
@@ -197,7 +192,6 @@ app.post("/logout", (req, res) => {
 // we then redirect to /urls
 app.post("/urls", (req, res) => {
   let tempStr = generateRandomString();
-  console.log("><><>><><><>><><",req.body.id)
   urlDatabase[req.body.id] = { tempStr: req.body.longURL,}
   res.redirect("/");
 });
@@ -205,7 +199,9 @@ app.post("/urls", (req, res) => {
 app.post("/urls/:shortURL", (req, res) => {
   let userID = req.cookies.user_id;
   let shortURL = req.params.shortURL;
-  urlDatabase[userID] = { shortURL : req.body.longURL };
+  let urlUserDb = urlDatabase[userID];
+  // urlUserDb = { shortURL : req.body.longURL };
+  urlUserDb[shortURL] = req.body.longURL
   res.redirect("/urls");
 });
 
@@ -216,18 +212,18 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   res.redirect("/urls");
 });
 
-app.get("/urls/:id", (req, res) => {
+app.get("/urls/:shortURL", (req, res) => {
   let userID = req.cookies.user_id;
   let user = users[req.cookies["user_id"]];
-  let templateVars = { urlUserDb: urlDatabase[userID] , user: user};
+  let templateVars = { urlUserDb: urlDatabase[userID] , user: user, shortURL: req.params.shortURL};
   res.render("url_show", templateVars);
 });
 
-app.get("/urls/:shortURL", (req, res) => {
-  let userID = req.cookies.user_id;
-  let longURL = urlDatabase[userID][req.params.shortURL];
-  res.redirect(longURL);
-})
+// app.get("/urls/:shortURL", (req, res) => {
+//   let userID = req.cookies.user_id;
+//   let longURL = urlDatabase[userID][req.params.shortURL];
+//   res.redirect(longURL);
+// })
 
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);

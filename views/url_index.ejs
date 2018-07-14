@@ -28,21 +28,16 @@
       <a href="<%= urlUserDb[key] %>"><%= [key] %></a>&nbsp; &nbsp; &nbsp;
       <a href="<%= urlUserDb[key] %>"><%= urlUserDb[key] %></a>&nbsp; &nbsp; &nbsp;
 
-      <form action="/urls/<%= key %>" method="POST">
-        <button>edit</button>
-      </form>&nbsp; &nbsp; &nbsp;
+      <a href="/urls/<%= key %>">
+        edit
+      </a>&nbsp; &nbsp; &nbsp;
 
       <form action="/urls/<%= key %>/delete" method="POST">
         <button>delete <%= urlUserDb[key] %></button>
       </form>
 
-<!-- <form action="/urls/<%= shortURL %>" method="POST" ></form> -->
-<!--       <a href=/urls/<%= key %>>edit</a>-->
-<!--       <form method="POST" action="/urls/<%= [key] %>/delete">
-        <input type="hidden" value="delete">
-        <input type="submit" value="delete">
-      </form>
- --> </li>
+
+ </li>
   <% }%>
 </ul>
 

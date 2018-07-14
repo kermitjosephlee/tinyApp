@@ -6,18 +6,19 @@
 </header>
 
 <!-- should display a list of shortened URLS that you could edit -->
-  <body style="font-size:20px; padding:50px;">
+  <body style="font-size:20px;">
     <form action="/urls/<%= shortURL %>" method="POST" style="margin:150px;">
-      <label for="shortURL">Select a Shortened URL =></label>
+
 
         Short URL
+        <%= shortURL %>
 
 
 
 
 
-      <input id="shortURL" type="text" name="longURL" placeholder="Long URL <here>" style="width: 300px">
-      <input type="submit" value="Submit">
+      <input id="longURL" type="text" name="longURL" value="<%= urlUserDb[shortURL] %>" style="width: 300px">
+      <input type="submit" value="update">
     </form>
   </body>
 </html>
