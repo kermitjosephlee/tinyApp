@@ -201,15 +201,17 @@ app.post("/urls", (req, res) => {
   res.redirect("/");
 });
 
-//
-app.post("/urls/:shortURL/delete", (req, res) => {
-  console.log("req.params.shortURL: ", req.params.shortURL);
-  delete urlDatabase[req.params.shortURL];
+app.post("/urls/:shortURL", (req, res) => {
+  let userID = req.cookies.user_id;
+  let shortURL = req.params.shortURL;
+  urlDatabase[userID] = { shortURL : req.body.longURL };
   res.redirect("/urls");
 });
 
-app.post("/urls/:shortURL", (req, res) => {
-  urlDatabase[req.params.shortURL] = req.body.longURL;
+app.post("/urls/:shortURL/delete", (req, res) => {
+  console.log("req.params.shortURL: ", req.params.shortURL);
+  let userID = req.cookies.user_id;
+  delete urlDatabase[userID].req.params.shortURL;
   res.redirect("/urls");
 });
 
@@ -221,9 +223,9 @@ app.get("/urls/:id", (req, res) => {
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  console.log("req.params.shortURL: ", req.params.shortURL);
-  let longURL = urlDatabase[req.params.shortURL];
   let userID = req.cookies.user_id;
+  console.log("req.params: ", req.params);
+  let longURL = urlDatabase[userID][req.params.shortURL];
   res.redirect(longURL);
 })
 
