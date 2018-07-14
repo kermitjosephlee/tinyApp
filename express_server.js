@@ -1,7 +1,7 @@
-var express = require("express");
-var app = express();
-var cookieParser = require('cookie-parser');
-var PORT = 8080;
+const express = require("express");
+const app = express();
+const cookieParser = require('cookie-parser');
+const PORT = 8080;
 
 
 const users = {
@@ -19,7 +19,7 @@ const users = {
 
 // urlDatabase is an object that contains unique ids for every long URL placed in it. Each URL is keyed by their shortURL as an identifyer. Each URL object also has the userId keying the variable users.id in the users object
 // urlDB = { users.userID: { shortURL : longURL}};
-var urlDatabase = {
+const urlDatabase = {
   "userRandomID":   { "b2xVn2": "http://www.lighthouse.ca", "asdfed": "http://www.yahoo.com"},
   "user2RandomID":  { "9sm5xL": "http://www.google.com", },
 };
@@ -27,8 +27,8 @@ var urlDatabase = {
 
 function generateRandomString(){
   let tempStr = "";
-  let stringLength = 6
-  let possibleLetters =
+  const stringLength = 6
+  const possibleLetters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     for (var i = 0; i < stringLength; i++){
@@ -117,8 +117,8 @@ app.get("/login", (req, res) => {
 // we create an object called templateVar which EJS will see as the object of urlDatabase (left side) which we assign the value of object urlDatabase (right side)
 // express then renders "url_new" with this information and renders it at location /urls/new
 app.get("/urls/new", (req, res) => {
-  let userID = req.cookies.user_id;
-  let user = users[userID];
+  const userID = req.cookies.user_id;
+  const user = users[userID];
 
   if (userID){
     let templateVars = { user: user };
@@ -131,9 +131,9 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
-  let userID = req.cookies.user_id;
-  let user = users[req.cookies["user_id"]]
-  let templateVars = { urlUserDb: urlDatabase[userID], user: user };
+  const userID = req.cookies.user_id;
+  const user = users[req.cookies["user_id"]]
+  const templateVars = { urlUserDb: urlDatabase[userID], user: user };
   res.render("url_register", templateVars)
 });
 
@@ -149,8 +149,8 @@ app.post("/register", (req, res) => {
 
   if (req.body.email && req.body.password){
 
-    let randomId = generateRandomString();
-    let userObj = { id: randomId, email: req.body.email, password: req.body.password };
+    const randomId = generateRandomString();
+    const userObj = { id: randomId, email: req.body.email, password: req.body.password };
     users[randomId]= userObj;
     urlDatabase[randomId] = {};
 
@@ -170,7 +170,7 @@ app.post("/register", (req, res) => {
 // we then redirect the page back to root
 // if the logic gate is not satisfied, we redirect to error
 app.post("/login", (req, res) => {
-  let foundUser = loginValidator(req.body.email, req.body.password);
+  const foundUser = loginValidator(req.body.email, req.body.password);
   if (req.body.email && req.body.password && foundUser){
     res.cookie('user_id', foundUser.id);
     res.redirect("/");
@@ -192,16 +192,16 @@ app.post("/logout", (req, res) => {
 // we then add to the urlDatabase object with the key of tempStr and value of the req.body.longURL
 // we then redirect to /urls
 app.post("/urls", (req, res) => {
-  let tempStr = generateRandomString();
-  let userID = req.cookies.user_id;
+  const tempStr = generateRandomString();
+  const userID = req.cookies.user_id;
   urlDatabase[userID][tempStr] = req.body.longURL;
   res.redirect("/");
 });
 
 app.post("/urls/:shortURL", (req, res) => {
-  let userID = req.cookies.user_id;
-  let shortURL = req.params.shortURL;
-  let urlUserDb = urlDatabase[userID];
+  const userID = req.cookies.user_id;
+  const shortURL = req.params.shortURL;
+  const urlUserDb = urlDatabase[userID];
   // urlUserDb = { shortURL : req.body.longURL };
   urlUserDb[shortURL] = req.body.longURL
   res.redirect("/urls");
@@ -209,15 +209,15 @@ app.post("/urls/:shortURL", (req, res) => {
 
 app.post("/urls/:shortURL/delete", (req, res) => {
   console.log("req.params.shortURL: ", req.params.shortURL);
-  let userID = req.cookies.user_id;
+  const userID = req.cookies.user_id;
   delete urlDatabase[userID][req.params.shortURL];
   res.redirect("/urls");
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  let userID = req.cookies.user_id;
-  let user = users[req.cookies["user_id"]];
-  let templateVars = { urlUserDb: urlDatabase[userID] , user: user, shortURL: req.params.shortURL};
+  const userID = req.cookies.user_id;
+  const user = users[req.cookies["user_id"]];
+  const templateVars = { urlUserDb: urlDatabase[userID] , user: user, shortURL: req.params.shortURL};
   res.render("url_show", templateVars);
 });
 
