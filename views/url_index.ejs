@@ -16,16 +16,27 @@
 
 <ul>
 
+
+
   <label>List of Current Shortened URLS</label>
     <% for (key in urlUserDb) {%>
+
+<!-- need this to display user-specific URLS in both short and long forms along with edit and delete buttons and functionalities -->
+
 
     <li>
       <a href="<%= urlUserDb[key] %>"><%= [key] %></a>&nbsp; &nbsp; &nbsp;
       <a href="<%= urlUserDb[key] %>"><%= urlUserDb[key] %></a>&nbsp; &nbsp; &nbsp;
 
-      <!-- ---edit button here--- -->
-      <!-- --- delete button here--- -->
+      <form action="/urls/<%= key %>" method="POST">
+        <button>edit</button>
+      </form>&nbsp; &nbsp; &nbsp;
 
+      <form action="/urls/<%= key %>/delete" method="POST">
+        <button>delete <%= urlUserDb[key] %></button>
+      </form>
+
+<!-- <form action="/urls/<%= shortURL %>" method="POST" ></form> -->
 <!--       <a href=/urls/<%= key %>>edit</a>-->
 <!--       <form method="POST" action="/urls/<%= [key] %>/delete">
         <input type="hidden" value="delete">
