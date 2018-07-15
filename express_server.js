@@ -45,6 +45,19 @@ function loginValidator (loginEmail, loginPassword){
   return false;
 };
 
+
+function collectionOfUserIDVariables (req){
+
+  const userID = req.session.user_id;
+  const user = users[userID];
+
+  return [userID, user]
+
+}
+
+
+
+
 //************************************************************
 
 app.set("view engine", "ejs");
@@ -65,29 +78,48 @@ app.get("/", (req, res) => {
   res.render("url_index", templateVars)
 });
 
-app.get("/urls", (req, res) => {
+function postURLS (req, res){
+
   const userID = req.session.user_id;
   const user = users[userID];
-  const templateVars = { urlUserDb: urlDatabase[userID], user: user,shortURL: req.params.shortURL};
-  res.render("url_index", templateVars)
-});
-
-app.post("/urls", (req, res) => {
-  const tempStr = generateRandomString();
-  const userID = req.session.user_id;
-  urlDatabase[userID][tempStr] = req.body.longURL;
-  res.redirect("/");
-});
-
-app.get("/urls/new", (req, res) => {
-  const userID = req.session.user_id;
-  const user = users[userID];
-  if (userID){
-    let templateVars = { user: user };
-    res.render("url_new", templateVars);
+  if (user) {
+    const tempStr = generateRandomString();
+    urlDatabase[userID][tempStr] = req.body.longURL;
+    res.redirect("/");
   } else {
     res.redirect("/login");
   }
+};
+
+
+
+
+app.get("/urls", (req, res) => {
+  authorizedAction(req, res, function (user){
+    const templateVars = { urlUserDb: urlDatabase[user.id], user: user,shortURL: req.params.shortURL};
+    res.render("url_index", templateVars);
+  });
+});
+
+app.post("/urls", (req, res) => {
+  postURLS(req, res);
+});
+
+function authorizedAction(req, res, doIfAuthorized){
+  const userID = req.session.user_id;
+  const user = users[userID];
+  if (user) {
+    doIfAuthorized(user);
+  } else {
+    res.redirect("/login");
+  }
+};
+
+app.get("/urls/new", (req, res) => {
+  authorizedAction(req, res, function(user){
+    let templateVars = { user: user };
+    res.render("url_new", templateVars);
+  });
 });
 
 app.get("/register", (req, res) => {
