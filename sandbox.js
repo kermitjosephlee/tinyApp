@@ -1,26 +1,19 @@
-var users = {
-
-  "userRandomID": {
-      id: "userRandomID",
-      email: "user@example.com",
-      password: "purple-monkey-dinosaur"
-    },
-   "user2RandomID": {
-      id: "user2RandomID",
-      email: "user2@example.com",
-      password: "dishwasher-funk"
-    }
+const urlDatabase = {
+  "userRandomID":   { "b2xVn2": "http://www.lighthouse.ca", "asdfed": "http://www.yahoo.com",},
+  "user2RandomID":  { "9sm5xL": "http://www.google.com", },
 };
 
-var testStr = "user@example.com"
+const testURL = "b2xVn2";
 
-for (i in users){
+function findLongURL (urlDatabase, testURL){
+  let longURL = null;
 
-  console.log("users[i].email = " + users[i].email + " " + testStr);
-  console.log("users[i].email = " + (users[i].email === testStr));
-
-//   if (user[i].email === testStr){
-//   console.log("users[i].email = ", users[i].email);
-// }
-
+  for (user in urlDatabase){
+    for (shortURLKey in urlDatabase[user]){
+      if (testURL === shortURLKey){
+        longURL = urlDatabase[user][shortURLKey];
+      }
+    }
+  }
+  return longURL;
 }

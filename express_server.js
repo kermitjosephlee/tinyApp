@@ -45,18 +45,13 @@ function loginValidator (loginEmail, loginPassword){
   return false;
 };
 
-
 function collectionOfUserIDVariables (req){
 
   const userID = req.session.user_id;
   const user = users[userID];
 
   return [userID, user]
-
 }
-
-
-
 
 //************************************************************
 
@@ -90,9 +85,6 @@ function postURLS (req, res){
     res.redirect("/login");
   }
 };
-
-
-
 
 app.get("/urls", (req, res) => {
   authorizedAction(req, res, function (user){
@@ -179,6 +171,28 @@ app.post("/urls/:shortURL", (req, res) => {
   urlUserDb[shortURL] = req.body.longURL
   res.redirect("/urls");
 });
+
+app.get("/u/:shortURL", (req, res) => {
+  const shortURL = req.params.shortURL;
+  const longURL = findLongURL(urlDatabase, shortURL);
+  if (longURL !== null){
+    res.redirect(longURL);
+  } else {
+    res.redirect("/error");
+  }
+});
+
+function findLongURL (urlDatabase, testURL){
+  let longURL = null;
+  for (user in urlDatabase){
+    for (shortURLKey in urlDatabase[user]){
+      if (testURL === shortURLKey){
+        longURL = urlDatabase[user][shortURLKey];
+      }
+    }
+  }
+  return longURL;
+};
 
 app.post("/urls/:shortURL/delete", (req, res) => {
   console.log("req.params.shortURL: ", req.params.shortURL);
